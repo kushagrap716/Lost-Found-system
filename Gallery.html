@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Item Gallery</title>
+
+<style>
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial}
+
+body{
+background:linear-gradient(to right,#2193b0,#6dd5ed);
+padding-top:80px;
+}
+
+.navbar{
+background:white;
+position:fixed;
+top:0;
+width:100%;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-container{
+max-width:1200px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#185a9d;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#333;
+}
+
+/* GALLERY */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:20px;
+}
+
+.gallery{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+position:relative;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+.status{
+width:14px;
+height:14px;
+border-radius:50%;
+position:absolute;
+top:10px;
+right:10px;
+}
+
+.red{background:red;}
+.green{background:green;}
+
+.deleteBtn{
+position:absolute;
+bottom:10px;
+right:10px;
+background:#e74c3c;
+color:white;
+border:none;
+border-radius:50%;
+width:28px;
+height:28px;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="navbar-container">
+
+<div class="logo">📦 I FOUND</div>
+
+<div class="nav-links">
+<a href="Project.html">Home</a>
+<a href="Lost.html">Lost Item</a>
+<a href="Found.html">Found Item</a>
+</div>
+
+</div>
+</div>
+
+<div class="container">
+
+<h1 style="color:white;margin-bottom:30px;">Found Items Gallery</h1>
+
+<div class="gallery" id="gallery"></div>
+
+</div>
+
+<script>
+
+let items=JSON.parse(localStorage.getItem("foundItems"))||[];
+
+let gallery=document.getElementById("gallery");
+
+items.forEach((item,index)=>{
+
+let card=document.createElement("div");
+card.className="card";
+
+let color=item.status==="claimed"?"green":"red";
+
+card.innerHTML=`
+
+<div class="status ${color}"></div>
+
+<h3>${item.name}</h3>
+
+<p>${item.description}</p>
+
+<p>${item.location}</p>
+
+<button class="deleteBtn" onclick="deleteItem(${index})">✖</button>
+
+`;
+
+gallery.appendChild(card);
+
+});
+
+function deleteItem(index){
+
+if(confirm("Delete this item?")){
+
+let items=JSON.parse(localStorage.getItem("foundItems"))||[];
+
+items.splice(index,1);
+
+localStorage.setItem("foundItems",JSON.stringify(items));
+
+location.reload();
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

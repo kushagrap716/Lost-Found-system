@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Lost Item</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:linear-gradient(to right,#f7971e,#ffd200);
+padding-top:80px;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:white;
+position:fixed;
+top:0;
+width:100%;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.navbar-container{
+max-width:1200px;
+margin:auto;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 20px;
+}
+
+.logo{
+font-size:22px;
+font-weight:bold;
+color:#185a9d;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+}
+
+.nav-links a{
+text-decoration:none;
+color:#333;
+font-weight:500;
+}
+
+.nav-links a:hover{
+color:#2193b0;
+}
+
+/* FORM */
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+color:#2d5c17;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:12px;
+background:#e74c3c;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#c0392b;
+}
+
+.result-card{
+background:#f4f4f4;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+}
+
+.no-result{
+color:red;
+font-weight:bold;
+text-align:center;
+margin-top:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+<div class="navbar-container">
+
+<div class="logo">📦 I FOUND</div>
+
+<div class="nav-links">
+<a href="Project.html">Home</a>
+<a href="Gallery.html">Item Gallery</a>
+<a href="Found.html">Found Item</a>
+</div>
+
+</div>
+</div>
+
+<div class="container">
+
+<h2>Search Lost Item</h2>
+
+<form onsubmit="searchItem(event)">
+
+<input type="text" id="searchBox" placeholder="Enter item name">
+
+<button type="submit">Search</button>
+
+</form>
+
+<div id="results"></div>
+
+</div>
+
+<script>
+
+function searchItem(event){
+
+event.preventDefault();
+
+let search=document.getElementById("searchBox").value.toLowerCase();
+
+let items=JSON.parse(localStorage.getItem("foundItems"))||[];
+
+let results=document.getElementById("results");
+
+results.innerHTML="";
+
+let matchFound=false;
+
+items.forEach((item,index)=>{
+
+if(item.status==="inventory" && item.name.toLowerCase().includes(search)){
+
+matchFound=true;
+
+let card=document.createElement("div");
+card.className="result-card";
+
+card.innerHTML=`
+
+<h3>${item.name}</h3>
+<p>${item.description}</p>
+<p><b>Location:</b> ${item.location}</p>
+
+<button onclick="claimItem(${index})">✋ Raise Hand</button>
+
+`;
+
+results.appendChild(card);
+
+}
+
+});
+
+if(!matchFound){
+
+results.innerHTML="<div class='no-result'>No matching item found</div>";
+
+}
+
+}
+
+function claimItem(index){
+
+let items=JSON.parse(localStorage.getItem("foundItems"))||[];
+
+items[index].status="claimed";
+
+localStorage.setItem("foundItems",JSON.stringify(items));
+
+alert("Item claimed successfully!");
+
+location.reload();
+
+}
+
+</script>
+
+</body>
+</html>
